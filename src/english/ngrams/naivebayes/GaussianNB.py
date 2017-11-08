@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from sets import Set
 from random import shuffle
 import nb_helper
 
@@ -16,9 +15,9 @@ TRAIN_SUBSETS_COUNT = int(0.8 * SUBSETS_COUNT)
 TEST_SUBSETS_COUNT = SUBSETS_COUNT - TRAIN_SUBSETS_COUNT
 
 d = Dataset()
-custom_features = d.custom_features(d.full_set, nb_helper.get_unigrams)
+custom_features = d.custom_features(d.full_set, nb_helper.get_bigrams)
 
-corpus_features = Set([feature for phrase_features in custom_features.values() for feature in phrase_features])
+corpus_features = set([feature for phrase_features in custom_features.values() for feature in phrase_features])
 generated_subsets = [subset for subset in d.get_subsets(SUBSETS_COUNT)]
 shuffle(generated_subsets) # randomize subsets
 
@@ -36,9 +35,10 @@ test_set = {phrase for subset in generated_subsets[-TEST_SUBSETS_COUNT:] for phr
 accepted = 0
 for phrase, intent in test_set:
     predicted = classifier.predict([nb_helper.format_features_for_classifier(custom_features[phrase], corpus_features)])
-    print phrase, predicted, intent
     if predicted[0] == intent:
         accepted += 1
+    else:
+        print(phrase, ' [predicted: ', predicted[0], '; correct: ', intent, ']')
 
 total = len(test_set)
-print total, accepted, accepted/(1.0 * total)
+print('SCORE: ', accepted, '/', total, ' (', accepted/(1.0 * total), ')')

@@ -1,3 +1,3 @@
 # chatintents
 
-Run with `python src/scriptname.py`
+Run with `python3 src/scriptname.py`
