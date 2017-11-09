@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os, json, math, re, nltk
+import sys, os, json, math, re, nltk, gensim
 from itertools import islice
 from unicodedata import normalize
 
@@ -22,6 +22,7 @@ class Dataset:
     default_features = {}
 
     stopwords = nltk.corpus.stopwords.words('english')
+    word_vectors = []
 
     def __init__(self):
         def load_phrases_and_intents(from_intent_path):
@@ -52,6 +53,11 @@ class Dataset:
 
             intent_validate_path = MY_PATH + '/nlu-benchmark/2017-06-custom-intent-engines/' + intent + '/validate_' + intent + '.json'
             load_phrases_and_intents(intent_validate_path)
+
+        w2v_model_path = MY_PATH + '/word2vec.model'
+        w2v_model = gensim.models.Word2Vec.load(w2v_model_path)
+        self.word_vectors = w2v_model.wv
+        del w2v_model
 
     def custom_features(self, custom_set, custom_extractor_function):
         custom_features = {}

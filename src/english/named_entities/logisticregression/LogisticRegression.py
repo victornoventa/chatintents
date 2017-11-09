@@ -15,7 +15,6 @@ TRAIN_SUBSETS_COUNT = int(0.8 * SUBSETS_COUNT)
 TEST_SUBSETS_COUNT = SUBSETS_COUNT - TRAIN_SUBSETS_COUNT
 
 d = Dataset()
-classifier = LogisticRegression()
 
 corpus_features = set([feature for phrase_features in d.default_features.values() for feature in phrase_features])
 generated_subsets = [subset for subset in d.get_subsets(SUBSETS_COUNT)]
@@ -28,6 +27,7 @@ for phrase, intent in train_set:
     X.append(lr_helper.format_features_for_classifier(d.default_features[phrase], corpus_features))
     y.append(intent)
 
+classifier = LogisticRegression()
 classifier.fit(X, y)
 
 test_set = {phrase for subset in generated_subsets[-TEST_SUBSETS_COUNT:] for phrase in subset.items()}
