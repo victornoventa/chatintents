@@ -26,7 +26,7 @@ class Dataset:
 
     def __init__(self):
         def load_phrases_and_intents(from_intent_path):
-            with open(from_intent_path) as intent_data:
+            with open(from_intent_path, encoding='utf-8') as intent_data:
                 phrases = json.load(intent_data)
 
             for phrase in phrases[intent]:
