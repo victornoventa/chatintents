@@ -24,7 +24,7 @@ class Dataset:
     stopwords = nltk.corpus.stopwords.words('english')
     word_vectors = []
 
-    def __init__(self):
+    def __init__(self, w2v_model_name = 'word2vec_size50_window1'):
         def load_phrases_and_intents(from_intent_path):
             with open(from_intent_path, encoding='utf-8') as intent_data:
                 phrases = json.load(intent_data)
@@ -54,7 +54,7 @@ class Dataset:
             intent_validate_path = MY_PATH + '/nlu-benchmark/2017-06-custom-intent-engines/' + intent + '/validate_' + intent + '.json'
             load_phrases_and_intents(intent_validate_path)
 
-        w2v_model_path = MY_PATH + '/word2vec.model'
+        w2v_model_path = MY_PATH + '/' + w2v_model_name + '.model'
         w2v_model = gensim.models.Word2Vec.load(w2v_model_path)
         self.word_vectors = w2v_model.wv
         del w2v_model
