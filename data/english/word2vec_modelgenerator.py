@@ -14,5 +14,5 @@ def get_tokens(phrase):
 d = Dataset()
 custom_features = d.custom_features(d.full_set, get_tokens)
 
-model = Word2Vec(custom_features.values(), size=50, window=1, min_count=1, workers=3)
-model.save('./word2vec_size50_window1.model')
+model = Word2Vec(custom_features.values(), size=25, window=1, min_count=1, workers=3)
+model.save('./word2vec_size25_window1.model')
