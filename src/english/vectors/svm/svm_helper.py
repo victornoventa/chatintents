@@ -3,7 +3,7 @@
 
 import numpy as np
 
-W2V_SIZE = 50
+W2V_SIZE = 25
 
 def format_features_for_classifier(phrase_features, vectors):
     features = np.zeros(W2V_SIZE)

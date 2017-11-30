@@ -15,7 +15,7 @@ SUBSETS_COUNT = 100
 TRAIN_SUBSETS_COUNT = int(0.8 * SUBSETS_COUNT)
 TEST_SUBSETS_COUNT = SUBSETS_COUNT - TRAIN_SUBSETS_COUNT
 
-d = Dataset()
+d = Dataset(w2v_model_name = 'word2vec_size25_window1')
 custom_features = d.custom_features(d.full_set, nn_helper.get_tokens)
 
 generated_subsets = [subset for subset in d.get_subsets(SUBSETS_COUNT)]
