@@ -9,50 +9,32 @@ MY_PATH = os.path.dirname(os.path.realpath(__file__))
 
 class Dataset:
     intents = [
-        'AddToPlaylist',
-        'BookRestaurant',
-        'GetWeather',
-        'PlayMusic',
-        'RateBook',
-        'SearchCreativeWork',
-        'SearchScreeningEvent'
+        'add',
+        'bad',
+        'bye',
+        'cancel',
+        'delete',
+        'get',
+        'greeting',
+        'help',
+        'ok',
+        'saymyname',
+        'thanks',
+        'welcome'
     ]
 
     full_set = {}
-    default_features = {}
 
-    stopwords = nltk.corpus.stopwords.words('english')
+    stopwords = nltk.corpus.stopwords.words('portuguese')
     word_vectors = []
 
     def __init__(self, w2v_model_name = 'word2vec_size25_window1'):
         def load_phrases_and_intents(from_intent_path):
             with open(from_intent_path, encoding='utf-8') as intent_data:
-                phrases = json.load(intent_data)
+                self.full_set = json.load(intent_data)
 
-            for phrase in phrases[intent]:
-                phrase_as_str = get_data_as_str(phrase['data'])
-
-                self.full_set[phrase_as_str] = intent
-                self.default_features[phrase_as_str] = get_data_default_features_as_list(phrase['data'])
-
-        def get_data_as_str(data):
-            data_as_str = ''
-            for feature in data:
-                data_as_str = data_as_str + feature['text']
-            return data_as_str.strip()
-
-        def get_data_default_features_as_list(data):
-            return self.get_features_as_list([feature['text'] for feature in data])
-
-        for intent in self.intents:
-            intent_train_path = MY_PATH + '/nlu-benchmark/2017-06-custom-intent-engines/' + intent + '/train_' + intent + '.json'
-            load_phrases_and_intents(intent_train_path)
-
-            intent_train_full_path = MY_PATH + '/nlu-benchmark/2017-06-custom-intent-engines/' + intent + '/train_' + intent + '_full.json'
-            load_phrases_and_intents(intent_train_full_path)
-
-            intent_validate_path = MY_PATH + '/nlu-benchmark/2017-06-custom-intent-engines/' + intent + '/validate_' + intent + '.json'
-            load_phrases_and_intents(intent_validate_path)
+        intents_by_phrase_path = MY_PATH + '/intents_by_phrase.json'
+        load_phrases_and_intents(intents_by_phrase_path)
 
         w2v_model_path = MY_PATH + '/' + w2v_model_name + '.model'
         w2v_model = gensim.models.Word2Vec.load(w2v_model_path)
