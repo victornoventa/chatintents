@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, re
-
-import numpy as np
-
-from sklearn.metrics import confusion_matrix
+import sys, re, ast
 
 file_absolute_path = sys.argv[1]
+intents_list = ast.literal_eval(sys.argv[2])
 
 wrong_phrases_classifications = []
 scores = []
@@ -27,7 +24,11 @@ for classified_phrase in wrong_phrases_classifications:
         predicted_classifications.append(data[1][1])
         correct_classifications.append(data[1][4])
 
-print(confusion_matrix(correct_classifications, predicted_classifications, labels=['AddToPlaylist', 'BookRestaurant', 'GetWeather', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']))
+from sklearn.metrics import confusion_matrix
+
+print("EXTRACTED INFO")
+print("\nconfusion_matrix")
+print(confusion_matrix(correct_classifications, predicted_classifications, labels=intents_list))
 
 accepted_scores = []
 total_scores = []
@@ -36,8 +37,17 @@ for score in scores:
     accepted_scores.append(data[1])
     total_scores.append(data[3])
 
+import numpy as np
+
 a = np.array(accepted_scores, dtype=np.float)
 b = np.array(total_scores, dtype=np.float)
+
 means = a / b
-media = np.average(means)
+print("\nmeans")
+print(means)
+
+print("\naverage")
+print(np.average(means))
+
+print("\nstd")
 print(np.std(means))
