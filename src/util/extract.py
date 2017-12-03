@@ -26,8 +26,9 @@ for classified_phrase in wrong_phrases_classifications:
         predicted_classifications.append(data[1][1])
         correct_classifications.append(data[1][4])
 
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 confusion_matrix_data = confusion_matrix(correct_classifications, predicted_classifications, labels=intents_list)
+classification_report_data = classification_report(correct_classifications, predicted_classifications, labels=intents_list)
 
 import numpy as np
 
@@ -58,10 +59,11 @@ extracted_file.write(np.array_str(np.average(means)))
 extracted_file.write("\n\nstd\n")
 extracted_file.write(np.array_str(np.std(means)))
 
+extracted_file.write("\n\n" + classification_report_data)
 extracted_file.close()
 
 import matplotlib.pyplot as plt
-np.set_printoptions(precision=2)
+# np.set_printoptions(precision=2)
 
 def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blues):
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
