@@ -15,8 +15,8 @@ with open(file_absolute_path) as f:
     for line in lines:
         if line[:6] == 'SCORE:':
             scores.append(line)
-        else:
-            phrases_classifications.append(line)
+
+        phrases_classifications.append(line)
 
 predicted_classifications = []
 correct_classifications = []

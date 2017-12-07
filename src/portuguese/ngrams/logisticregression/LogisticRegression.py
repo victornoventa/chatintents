@@ -37,8 +37,8 @@ for phrase, intent in test_set:
     predicted = classifier.predict([lr_helper.format_features_for_classifier(custom_features[phrase], corpus_features)])
     if predicted[0] == intent:
         accepted += 1
-    else:
-        print(phrase, ' [predicted: ', predicted[0], '; correct: ', intent, ']')
+    
+    print(phrase.encode('utf-8'), ' [predicted: ', predicted[0], '; correct: ', intent, ']')
 
 total = len(test_set)
 print('SCORE: ', accepted, '/', total, ' (', accepted/(1.0 * total), ')')
