@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from random import shuffle
+import time
 import nb_helper
 
 import sys
@@ -28,6 +29,8 @@ for phrase, intent in train_set:
     X.append(nb_helper.format_features_for_classifier(custom_features[phrase], corpus_features))
     y.append(intent)
 
+start_time = time.time()
+
 classifier = MultinomialNB()
 classifier.fit(X, y)
 
@@ -40,5 +43,7 @@ for phrase, intent in test_set:
     
     print(phrase.encode('utf-8'), ' [predicted: ', predicted[0], '; correct: ', intent, ']')
 
-total = len(test_set)
+print('TIME: ', (time.time() - start_time))
+
+total= len(test_set)
 print('SCORE: ', accepted, '/', total, ' (', accepted/(1.0 * total), ')')
