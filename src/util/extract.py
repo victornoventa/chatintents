@@ -8,7 +8,7 @@ intents_list = ast.literal_eval(sys.argv[2])
 figure_title = sys.argv[3]
 figure_cmap = sys.argv[4]
 
-wrong_phrases_classifications = []
+phrases_classifications = []
 scores = []
 with open(file_absolute_path) as f:
     lines =  [x.strip('\n') for x in f.readlines()]
@@ -16,11 +16,11 @@ with open(file_absolute_path) as f:
         if line[:6] == 'SCORE:':
             scores.append(line)
         else:
-            wrong_phrases_classifications.append(line)
+            phrases_classifications.append(line)
 
 predicted_classifications = []
 correct_classifications = []
-for classified_phrase in wrong_phrases_classifications:
+for classified_phrase in phrases_classifications:
     data = [x.split() for x in re.split(r"[\[\]]", classified_phrase)]
     if (len(data) > 1):
         predicted_classifications.append(data[1][1])
@@ -28,7 +28,7 @@ for classified_phrase in wrong_phrases_classifications:
 
 from sklearn.metrics import confusion_matrix, classification_report
 confusion_matrix_data = confusion_matrix(correct_classifications, predicted_classifications, labels=intents_list)
-classification_report_data = classification_report(correct_classifications, predicted_classifications, labels=intents_list)
+classification_report_data = classification_report([intents_list.index(x) for x in correct_classifications], [intents_list.index(x) for x in predicted_classifications])
 
 import numpy as np
 
@@ -91,4 +91,4 @@ fig = plt.figure(figsize=[12, 10])
 plot_confusion_matrix(confusion_matrix_data, title=figure_title, classes=intents_list, cmap=figure_cmap)
 
 fig.tight_layout()
-plt.savefig(file_absolute_path_without_extension + '_confusion_matrix.png', format='png', dpi=300)
+plt.savefig(file_absolute_path_without_extension + '_confusion_matrix.png', format='png', dpi=150)
