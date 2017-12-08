@@ -40,7 +40,7 @@ for phrase, intent in test_set:
     predicted = classifier.predict([svm_helper.format_features_for_classifier(custom_features[phrase], d.word_vectors)])
     if predicted[0] == intent:
         accepted += 1
-    
+
     print(phrase.encode('utf-8'), ' [predicted: ', predicted[0], '; correct: ', intent, ']')
 
 print('TIME: ', (time.time() - start_time))

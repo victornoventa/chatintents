@@ -16,7 +16,7 @@ TRAIN_SUBSETS_COUNT = int(0.8 * SUBSETS_COUNT)
 TEST_SUBSETS_COUNT = SUBSETS_COUNT - TRAIN_SUBSETS_COUNT
 
 d = Dataset()
-custom_features = d.custom_features(d.full_set, nb_helper.get_trigrams)
+custom_features = d.custom_features(d.full_set, nb_helper.get_unigrams)
 
 corpus_features = set([feature for phrase_features in custom_features.values() for feature in phrase_features])
 generated_subsets = [subset for subset in d.get_subsets(SUBSETS_COUNT)]
@@ -40,7 +40,7 @@ for phrase, intent in test_set:
     predicted = classifier.predict([nb_helper.format_features_for_classifier(custom_features[phrase], corpus_features)])
     if predicted[0] == intent:
         accepted += 1
-    
+
     print(phrase.encode('utf-8'), ' [predicted: ', predicted[0], '; correct: ', intent, ']')
 
 print('TIME: ', (time.time() - start_time))
