@@ -8,15 +8,18 @@ intents_list = ast.literal_eval(sys.argv[2])
 figure_title = sys.argv[3]
 figure_cmap = sys.argv[4]
 
-phrases_classifications = []
+times = []
 scores = []
+phrases_classifications = []
 with open(file_absolute_path) as f:
     lines =  [x.strip('\n') for x in f.readlines()]
     for line in lines:
-        if line[:6] == 'SCORE:':
+        if line[:5] == 'TIME:':
+            times.append(line)
+        elif line[:6] == 'SCORE:':
             scores.append(line)
-
-        phrases_classifications.append(line)
+        else:
+            phrases_classifications.append(line)
 
 predicted_classifications = []
 correct_classifications = []
@@ -28,9 +31,16 @@ for classified_phrase in phrases_classifications:
 
 from sklearn.metrics import confusion_matrix, classification_report
 confusion_matrix_data = confusion_matrix(correct_classifications, predicted_classifications, labels=intents_list)
-classification_report_data = classification_report([intents_list.index(x) for x in correct_classifications], [intents_list.index(x) for x in predicted_classifications])
+classification_report_data = classification_report(correct_classifications, predicted_classifications, labels=intents_list)
+
+times_in_seconds = []
+for time in times:
+    data = time.split()
+    times_in_seconds.append(data[1])
 
 import numpy as np
+
+times_in_seconds = np.array(times_in_seconds, dtype=np.float)
 
 accepted_scores = []
 total_scores = []
@@ -39,9 +49,10 @@ for score in scores:
     accepted_scores.append(data[1])
     total_scores.append(data[3])
 
-a = np.array(accepted_scores, dtype=np.float)
-b = np.array(total_scores, dtype=np.float)
-means = a / b
+
+accepted_scores = np.array(accepted_scores, dtype=np.float)
+total_scores = np.array(total_scores, dtype=np.float)
+score_means = accepted_scores / total_scores
 
 file_absolute_path_without_extension = file_absolute_path.split('.')[0]
 extracted_file = open(file_absolute_path_without_extension + '_extracted.txt', 'w')
@@ -50,14 +61,19 @@ extracted_file.write("EXTRACTED INFO")
 extracted_file.write("\n\nconfusion_matrix\n")
 extracted_file.write(np.array_str(confusion_matrix_data))
 
-extracted_file.write("\n\nmeans\n")
-extracted_file.write(np.array_str(means))
+extracted_file.write("\n\nscore means\n")
+extracted_file.write(np.array_str(score_means))
+extracted_file.write("\naverage score\n")
+extracted_file.write(np.array_str(np.average(score_means)))
+extracted_file.write("\nscore std\n")
+extracted_file.write(np.array_str(np.std(score_means)))
 
-extracted_file.write("\n\naverage\n")
-extracted_file.write(np.array_str(np.average(means)))
-
-extracted_file.write("\n\nstd\n")
-extracted_file.write(np.array_str(np.std(means)))
+extracted_file.write("\n\nexecution times\n")
+extracted_file.write(np.array_str(times_in_seconds))
+extracted_file.write("\naverage time\n")
+extracted_file.write(np.array_str(np.average(times_in_seconds)))
+extracted_file.write("\ntime std\n")
+extracted_file.write(np.array_str(np.std(times_in_seconds)))
 
 extracted_file.write("\n\n" + classification_report_data)
 extracted_file.close()
